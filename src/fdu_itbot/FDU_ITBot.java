@@ -18,7 +18,7 @@ public class FDU_ITBot {
     private final static String WELCOME_MESSAGE = "Welcome to the FDU IT bot.\n  What is your name? ";
     private final static String INITIAL_QUERY_PART1 = "Hi ";
     private final static String INITIAL_QUERY_PART2 = "! How can I help you?";
-    private final static String NEXT_QUERY = "Please specify a help topic (type exit to quit)";
+    private final static String NEXT_QUERY = "> Please specify a help topic (type exit to quit)";
     
     private static String userName;
     
@@ -49,7 +49,7 @@ public class FDU_ITBot {
         do {
             userInput = ITBot_UI.getInputFromUser();
             String parsedInput = ITBot_Parser.parseInput(userInput);
-            ITBot_UI.outputToUser("You typed ... " + parsedInput);
+            ITBot_UI.outputToUser(">>> You typed ... " + parsedInput);
             int answerID = dataRepo.searchByKeyword(parsedInput);
             if (answerID != FDU_ITBot_DataRepo.NO_RESULT)
                 ITBot_UI.outputToUser(dataRepo.getAnswer(answerID));
