@@ -17,7 +17,7 @@ import java.io.InputStreamReader;
  * 
  * Methods
  *    void outputToUser(String)  // ToDo - much later, check if write successful
- *    String inputFromUser()      // raw string, delimited by newline
+ *    String getInputFromUser()      // raw string, delimited by newline
 
  */
 public class FDU_ITBot_UI {
