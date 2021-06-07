@@ -12,18 +12,30 @@ public class FDU_ITBot {
      * Name & text in main class for now 
      *   (single instance, not much value to sending to a new class now, for multiple users need to refactor to a separate class)
      * Instantiates & calls UI to manage input & output
+     * Parses user input, searches database for match & print answer if found
+     * 
+     * Program ends when user types "exit"
      */
     
-    private final static String VERSION = "v0.1";
+    private final static String VERSION = "v0.2";
     private final static String WELCOME_MESSAGE = "Welcome to the FDU IT bot.\n  What is your name? ";
     private final static String INITIAL_QUERY_PART1 = "Hi ";
     private final static String INITIAL_QUERY_PART2 = "! How can I help you?";
+    private final static String NEXT_QUERY = "> Please specify a help topic (type exit to quit)";
     
     private static String userName;
     
     public static void main(String[] args) {
-        // TODO code application logic here
+        
+        String userInput;
+
+        // Create instances of UI, parser & data repository & print intro
+        //   Note: parser & data repository are stateless - could be static or singletons
+        
         FDU_ITBot_UI ITBot_UI = new FDU_ITBot_UI();
+        FDU_ITBot_ParseUserInput ITBot_Parser = new FDU_ITBot_ParseUserInput();
+        FDU_ITBot_DataRepo dataRepo = new FDU_ITBot_DataRepo();
+        
         ITBot_UI.outputToUser("FDU IT Bot " + VERSION + "\n\n");
         ITBot_UI.outputToUser(WELCOME_MESSAGE);
         
@@ -38,6 +50,20 @@ public class FDU_ITBot {
             userName = inputtedName;
         }
         ITBot_UI.outputToUser(INITIAL_QUERY_PART1 + userName + INITIAL_QUERY_PART2);
+        
+        // loop until user types "exit"
+        //   get input, normalize & parse, search DB for answer & if found print answer
+        do {
+            userInput = ITBot_UI.getInputFromUser();
+            String parsedInput = ITBot_Parser.parseInput(userInput);
+            ITBot_UI.outputToUser(">>> You typed ... " + parsedInput);
+            
+            int answerID = dataRepo.searchByKeyword(parsedInput);
+            if (answerID != FDU_ITBot_DataRepo.NO_RESULT)
+                ITBot_UI.outputToUser(dataRepo.getAnswer(answerID));
+            ITBot_UI.outputToUser(NEXT_QUERY);
+            
+        } while (!userInput.equals("exit"));
         
         try {  // wait before exiting - so user can see screen
             Thread.sleep(1000);
